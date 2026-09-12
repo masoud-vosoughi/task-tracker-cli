@@ -17,7 +17,7 @@ def load_tasks():
 
 def save_tasks(tasks):
     with open(FILE_PATH, "w") as file:
-        json.dump(tasks, file)
+        json.dump(tasks, file, indent=4)
 
 tasks = load_tasks()
 
@@ -43,7 +43,7 @@ if len(sys.argv) > 1:
             save_tasks(tasks)
             print(f"Task added successfully (ID: {new_id})")
         else:
-            print("not enough input")
+            print("Missing required arguments")
     elif command == "update":
         if len(sys.argv) == 4:
             task_found = False
@@ -59,6 +59,7 @@ if len(sys.argv) > 1:
                         current_time = datetime.now().isoformat()
                         task["updatedAt"] = current_time
                         task_found = True
+                        break
                 if task_found:
                     save_tasks(tasks)
                     print("Task updated successfully")
@@ -72,7 +73,25 @@ if len(sys.argv) > 1:
     
     elif command == "delete":
         if len(sys.argv) == 3:
-            pass
+            try:
+                task_id = int(sys.argv[2])
+            except ValueError:
+                print("Task ID must be a number")
+            else:
+                task_found = False
+
+                for index, task in enumerate(tasks):
+                    if task["id"] == task_id:
+                        del tasks[index]
+                        task_found = True
+                        break
+
+                if task_found:
+                    save_tasks(tasks)
+                    print("Task deleted successfully")
+                else:
+                    print("Task not found")
+
         else:
             print("Missing required arguments")
     elif command == "mark-in-progress":
@@ -87,25 +106,28 @@ if len(sys.argv) > 1:
             print("Missing required arguments")
     elif command == "list":
         if len(sys.argv) == 2:
-            for task in tasks:
-                print(task)
+            if not tasks:
+                print("No tasks found")
+            else:
+                for task in tasks:
+                    print(task)
         elif len(sys.argv) == 3:
             status = sys.argv[2]
             if status in valid_statuses:
-                task_found= False
+                task_found = False
                 for task in tasks:
                     if task["status"] == status:
-                      task_found = True
-                      print(task)
+                        task_found = True
+                        print(task)
                 if not task_found:
                     print("No tasks found")
                     
             else:
                 print("Invalid status")
         else:
-            print("not valid input")
+            print("Missing required arguments")
         
     
 else:
-    print("no command")
+    print("No command provided")
 
