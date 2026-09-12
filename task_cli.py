@@ -1,7 +1,7 @@
 import sys
 import json
 from pathlib import Path
-
+from datetime import datetime
 
 FILE_PATH = Path("tasks.json")
 def load_tasks():
@@ -15,8 +15,12 @@ def load_tasks():
             tasks = json.load(file)
     return tasks
 
+def save_tasks(tasks):
+    with open(FILE_PATH, "w") as file:
+        json.dump(tasks, file)
+
 tasks = load_tasks()
-print(tasks)
+
 
 valid_commands = ["add", "update", "delete" ,"mark-in-progress", "mark-done", "list"]
 valid_statuses = ["todo", "in-progress", "done"]
@@ -27,7 +31,17 @@ if len(sys.argv) > 1:
         print("Invalid command")
     elif command == "add":
         if len(sys.argv) == 3:
-            pass
+            description = sys.argv[2]
+            if len(tasks) == 0:
+                new_id = 1
+            else:
+                new_id = max(task["id"] for task in tasks)+1
+            status = "todo"
+            current_time = datetime.now().isoformat()
+            new_task = {"id" : new_id, "description" : description, "status" : status, "createdAt" : current_time, "updatedAt" : current_time }
+            tasks.append(new_task)
+            save_tasks(tasks)
+            print(f"Task added successfully (ID: {new_id})")
         else:
             print("not enough input")
     elif command == "update":
@@ -45,7 +59,7 @@ if len(sys.argv) > 1:
         if len(sys.argv) == 3:
             pass
         else:
-            print("not enough inputی")
+            print("not enough input")
     elif command == "mark-done":
         if len(sys.argv) == 3:
             pass
