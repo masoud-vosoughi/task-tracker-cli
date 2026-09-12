@@ -46,25 +46,45 @@ if len(sys.argv) > 1:
             print("not enough input")
     elif command == "update":
         if len(sys.argv) == 4:
-            pass
+            task_found = False
+            try:
+                task_id = int(sys.argv[2])
+                new_description = sys.argv[3]
+            except ValueError:
+                print("Task ID must be a number")
+            else:
+                for task in tasks:
+                    if task["id"] == task_id:
+                        task["description"] = new_description
+                        current_time = datetime.now().isoformat()
+                        task["updatedAt"] = current_time
+                        task_found = True
+                if task_found:
+                    save_tasks(tasks)
+                    print("Task updated successfully")
+                else:  
+                    print("Task not found")
+                
+                
         else:
-            print("not enough input")
+            print("Missing required arguments")
+
     
     elif command == "delete":
         if len(sys.argv) == 3:
             pass
         else:
-            print("not enough input")
+            print("Missing required arguments")
     elif command == "mark-in-progress":
         if len(sys.argv) == 3:
             pass
         else:
-            print("not enough input")
+            print("Missing required arguments")
     elif command == "mark-done":
         if len(sys.argv) == 3:
             pass
         else:
-            print("not enough input")
+            print("Missing required arguments")
     elif command == "list":
         if len(sys.argv) == 2:
             for task in tasks:
@@ -78,10 +98,10 @@ if len(sys.argv) > 1:
                       task_found = True
                       print(task)
                 if not task_found:
-                    print("no task found")
+                    print("No tasks found")
                     
             else:
-                print("status is not valid")
+                print("Invalid status")
         else:
             print("not valid input")
         
