@@ -67,11 +67,19 @@ if len(sys.argv) > 1:
             print("not enough input")
     elif command == "list":
         if len(sys.argv) == 2:
-            print("list")
+            for task in tasks:
+                print(task)
         elif len(sys.argv) == 3:
             status = sys.argv[2]
             if status in valid_statuses:
-                print(status)
+                task_found= False
+                for task in tasks:
+                    if task["status"] == status:
+                      task_found = True
+                      print(task)
+                if not task_found:
+                    print("no task found")
+                    
             else:
                 print("status is not valid")
         else:
