@@ -96,12 +96,47 @@ if len(sys.argv) > 1:
             print("Missing required arguments")
     elif command == "mark-in-progress":
         if len(sys.argv) == 3:
-            pass
+            try:
+                task_id = int(sys.argv[2])
+            except ValueError:
+                print("Task ID must be a number")
+            else:
+                task_found = False
+                for task in tasks:
+                    if task["id"] == task_id:
+                        task["status"] = "in-progress"
+                        current_time = datetime.now().isoformat()
+                        task["updatedAt"] = current_time
+                        task_found = True
+                        break
+                if task_found:
+                    save_tasks(tasks)
+                    print("Task marked in progress successfully")
+                else:
+                    print("Task not found")
+                    
         else:
             print("Missing required arguments")
     elif command == "mark-done":
         if len(sys.argv) == 3:
-            pass
+            try:
+                task_id = int(sys.argv[2])
+            except ValueError:
+                print("Task ID must be a number")
+            else:
+                task_found = False
+                for task in tasks:
+                    if task["id"] == task_id:
+                        task["status"] = "done"
+                        current_time = datetime.now().isoformat()
+                        task["updatedAt"] = current_time
+                        task_found = True
+                        break
+                if task_found:
+                    save_tasks(tasks)
+                    print("Task marked done successfully")
+                else:
+                    print("Task not found")
         else:
             print("Missing required arguments")
     elif command == "list":
