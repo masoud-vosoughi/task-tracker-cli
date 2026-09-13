@@ -56,7 +56,6 @@ def add_task(tasks, description):
         new_id = 1
     else:
         new_id = max(task["id"] for task in tasks) + 1
-
     status = "todo"
     current_time = datetime.now().isoformat()
 
@@ -83,6 +82,19 @@ def update_task_description(tasks, task_id, new_description):
         return True
 
     return False
+
+def get_tasks(tasks, status=None):
+    if status is None:
+        return tasks
+    return [task for task in tasks if task["status"] == status]
+
+def print_tasks(tasks):
+    if not tasks:
+        print("No tasks found")
+        return
+
+    for task in tasks:
+        print(task)
 
 tasks = load_tasks()
 valid_commands = ["add", "update", "delete" ,"mark-in-progress", "mark-done", "list"]
@@ -150,24 +162,18 @@ if len(sys.argv) > 1:
             print("Missing required arguments")
     elif command == "list":
         if len(sys.argv) == 2:
-            if not tasks:
-                print("No tasks found")
-            else:
-                for task in tasks:
-                    print(task)
+            selected_tasks = get_tasks(tasks)
+            print_tasks(selected_tasks)
+
         elif len(sys.argv) == 3:
             status = sys.argv[2]
+
             if status in valid_statuses:
-                task_found = False
-                for task in tasks:
-                    if task["status"] == status:
-                        task_found = True
-                        print(task)
-                if not task_found:
-                    print("No tasks found")
-                    
+                selected_tasks = get_tasks(tasks, status)
+                print_tasks(selected_tasks)
             else:
                 print("Invalid status")
+
         else:
             print("Missing required arguments")
         
