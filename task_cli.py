@@ -104,7 +104,7 @@ def main():
         "mark-done",
         "list",
     ]
-    valid_statuses = ["todo", "in-progress", "done"]
+    valid_statuses = ["todo", "in-progress", "done", "not-done"]
 
     if len(sys.argv) > 1:
         command = sys.argv[1]

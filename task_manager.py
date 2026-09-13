@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 from storage import save_tasks
 
@@ -40,7 +40,7 @@ def delete_task(tasks, task_id):
 
 
 def update_timestamp(task):
-    task["updatedAt"] = datetime.now().isoformat()
+    task["updatedAt"] = datetime.now(UTC).isoformat()
 
 
 def add_task(tasks, description):
@@ -50,7 +50,7 @@ def add_task(tasks, description):
         new_id = max(task["id"] for task in tasks) + 1
 
     status = "todo"
-    current_time = datetime.now().isoformat()
+    current_time = datetime.now(UTC).isoformat()
 
     new_task = {
         "id": new_id,
@@ -81,5 +81,7 @@ def update_task_description(tasks, task_id, new_description):
 def get_tasks(tasks, status=None):
     if status is None:
         return tasks
+    elif status == "not-done":
+        return [task for task in tasks if task["status"] != "done"]
 
     return [task for task in tasks if task["status"] == status]
