@@ -94,7 +94,11 @@ def handle_list(tasks, args, valid_statuses):
 
 
 def main():
-    tasks = load_tasks()
+    try:
+        tasks = load_tasks()
+    except ValueError as error:
+        print(f"Error: {error}")
+        return
 
     valid_commands = [
         "add",

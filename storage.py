@@ -13,9 +13,12 @@ def load_tasks():
         FILE_PATH.write_text("[]")
         return tasks
 
-    else:
+    try:
         with open(FILE_PATH, "r") as file:
             tasks = json.load(file)
+
+    except json.JSONDecodeError as error:
+        raise ValueError("tasks.json contains invalid JSON") from error
 
     return tasks
 
