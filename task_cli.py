@@ -29,8 +29,7 @@ def update_task_status(tasks, task_id, new_status):
     task = find_task(tasks, task_id)
     if task:
         task["status"] = new_status
-        current_time = datetime.now().isoformat()
-        task["updatedAt"] = current_time
+        update_timestamp(task)
         save_tasks(tasks)
         return True
     return False
@@ -49,6 +48,42 @@ def delete_task(tasks, task_id):
             return True
     return False
 
+def update_timestamp(task):
+    task["updatedAt"] = datetime.now().isoformat()
+
+def add_task(tasks, description):
+    if len(tasks) == 0:
+        new_id = 1
+    else:
+        new_id = max(task["id"] for task in tasks) + 1
+
+    status = "todo"
+    current_time = datetime.now().isoformat()
+
+    new_task = {
+        "id": new_id,
+        "description": description,
+        "status": status,
+        "createdAt": current_time,
+        "updatedAt": current_time
+    }
+
+    tasks.append(new_task)
+    save_tasks(tasks)
+
+    return new_id
+
+def update_task_description(tasks, task_id, new_description):
+    task = find_task(tasks, task_id)
+
+    if task:
+        task["description"] = new_description
+        update_timestamp(task)
+        save_tasks(tasks)
+        return True
+
+    return False
+
 tasks = load_tasks()
 valid_commands = ["add", "update", "delete" ,"mark-in-progress", "mark-done", "list"]
 valid_statuses = ["todo", "in-progress", "done"]
@@ -60,15 +95,7 @@ if len(sys.argv) > 1:
     elif command == "add":
         if len(sys.argv) == 3:
             description = sys.argv[2]
-            if len(tasks) == 0:
-                new_id = 1
-            else:
-                new_id = max(task["id"] for task in tasks)+1
-            status = "todo"
-            current_time = datetime.now().isoformat()
-            new_task = {"id" : new_id, "description" : description, "status" : status, "createdAt" : current_time, "updatedAt" : current_time }
-            tasks.append(new_task)
-            save_tasks(tasks)
+            new_id = add_task(tasks, description)
             print(f"Task added successfully (ID: {new_id})")
         else:
             print("Missing required arguments")
@@ -79,20 +106,12 @@ if len(sys.argv) > 1:
             if task_id is None:
                 print("Task ID must be a number")
             else:
-                task = find_task(tasks, task_id)
-
-                if task:
-                    task["description"]= new_description
-                    current_time = datetime.now().isoformat()
-                    task["updatedAt"] = current_time
-                    save_tasks(tasks)
+                if update_task_description(tasks, task_id, new_description):
                     print("Task updated successfully")
-                else:  
-                    print("Task not found")        
+                else:
+                    print("Task not found")       
         else:
             print("Missing required arguments")
-
-    
     elif command == "delete":
         if len(sys.argv) == 3:
             task_id = parse_task_id(sys.argv[2])
