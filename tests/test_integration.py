@@ -1,3 +1,5 @@
+"""Integration tests for task persistence using temporary JSON storage."""
+
 import storage
 from task_manager import (
     add_task,

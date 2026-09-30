@@ -1,3 +1,5 @@
+"""Business logic for creating, updating, filtering, and deleting tasks."""
+
 from datetime import UTC, datetime
 
 from storage import save_tasks
@@ -23,6 +25,8 @@ def update_task_status(tasks, task_id, new_status):
 
 
 def parse_task_id(value):
+    """Convert a task ID to an integer, or return None if it is invalid."""
+
     try:
         return int(value)
     except ValueError:
@@ -47,6 +51,7 @@ def add_task(tasks, description):
     if len(tasks) == 0:
         new_id = 1
     else:
+        # Derive the next ID from existing task IDs rather than list positions.
         new_id = max(task["id"] for task in tasks) + 1
 
     status = "todo"
@@ -82,6 +87,7 @@ def get_tasks(tasks, status=None):
     if status is None:
         return tasks
     elif status == "not-done":
+        # Treat "not-done" as a query filter for every unfinished task.
         return [task for task in tasks if task["status"] != "done"]
 
     return [task for task in tasks if task["status"] == status]

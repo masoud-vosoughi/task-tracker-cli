@@ -1,3 +1,5 @@
+"""Unit tests for task-manager business logic with persistence mocked out."""
+
 import task_manager
 from task_manager import (
     add_task,

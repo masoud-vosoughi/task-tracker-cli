@@ -1,3 +1,5 @@
+"""Command-line interface and command handlers for the task tracker."""
+
 import sys
 
 from storage import load_tasks
@@ -95,6 +97,7 @@ def handle_list(tasks, args, valid_statuses):
 
 def main():
     try:
+        # Stop command execution if persisted task data cannot be loaded safely.
         tasks = load_tasks()
     except ValueError as error:
         print(f"Error: {error}")
@@ -108,7 +111,13 @@ def main():
         "mark-done",
         "list",
     ]
-    valid_statuses = ["todo", "in-progress", "done", "not-done"]
+    # "not-done" is a filter only; it is not stored as an actual task status.
+    valid_statuses = [
+        "todo",
+        "in-progress",
+        "done",
+        "not-done",
+    ]
 
     if len(sys.argv) > 1:
         command = sys.argv[1]

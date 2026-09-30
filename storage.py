@@ -1,6 +1,7 @@
+"""JSON-based persistence layer for task data."""
+
 import json
 from pathlib import Path
-
 
 FILE_PATH = Path("tasks.json")
 
@@ -9,6 +10,7 @@ def load_tasks():
     tasks = []
 
     if not FILE_PATH.exists():
+        # Initialize missing storage with a valid empty JSON array.
         FILE_PATH.touch()
         FILE_PATH.write_text("[]")
         return tasks
@@ -18,6 +20,7 @@ def load_tasks():
             tasks = json.load(file)
 
     except json.JSONDecodeError as error:
+        # Expose a simpler storage error instead of leaking JSON-specific details.
         raise ValueError("tasks.json contains invalid JSON") from error
 
     return tasks
