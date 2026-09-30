@@ -26,7 +26,7 @@ def handle_add(tasks, args):
         new_id = add_task(tasks, description)
         print(f"Task added successfully (ID: {new_id})")
     else:
-        print("Missing required arguments")
+        print("Invalid arguments")
 
 
 def handle_update(tasks, args):
@@ -90,7 +90,7 @@ def handle_list(tasks, args, valid_statuses):
             print("Invalid status")
 
     else:
-        print("Missing required arguments")
+        print("Invalid number of arguments")
 
 
 def main():
